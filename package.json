@@ -6,14 +6,15 @@
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "start": "npm run build && electron ./dist/main.js"
+    "start": "pnpm run build && electron ./dist/main.js"
   },
   "author": "LapsTime",
   "devDependencies": {
+    "@types/node": "^18.15.5",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
-    "electron": "^23.1.4",
-    "eslint": "^8.36.0",
-    "typescript": "^5.0.2"
+    "electron": "^22.2.0",
+    "eslint": "^7.32.0",
+    "typescript": "^4.8.3"
   }
 }

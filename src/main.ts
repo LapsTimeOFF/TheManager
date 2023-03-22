@@ -1,5 +1,7 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, Menu, nativeImage, Tray } from "electron";
 import * as path from "path";
+
+let tray;
 
 function createWindow() {
   // Create the browser window.
@@ -7,12 +9,14 @@ function createWindow() {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
+      contextIsolation: false,
+      nodeIntegration: true,
     },
     width: 800,
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, "../index.html"));
+  mainWindow.loadFile(path.join(__dirname, "../public/index.html"));
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
@@ -22,6 +26,27 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  const icon16 = nativeImage.createFromPath('assets/key-16x16.png')
+  const icon32 = nativeImage.createFromPath('assets/key-32x32.png')
+  const github = nativeImage.createFromPath('assets/github.png')
+  const google = nativeImage.createFromPath('assets/google.png')
+  const settings = nativeImage.createFromPath('assets/settings.png')
+  tray = new Tray(icon16);
+
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'OTP Codes', type: 'submenu', submenu: [
+      { label: 'Github', type: 'normal', icon: github },
+      { label: 'Google', type: 'normal', icon: google },
+    ] },
+    { label: 'SSH Keys', icon: icon32, type: 'submenu', submenu: [
+      { label: 'Github SSH', type: 'radio', icon: github },
+    ] },
+    { type: 'separator' },
+    { label: 'Settings', type: 'normal', icon: settings },
+  ])
+  
+  tray.setContextMenu(contextMenu)
+
   createWindow();
 
   app.on("activate", function () {
